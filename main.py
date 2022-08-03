@@ -1,16 +1,27 @@
-# This is a sample Python script.
-
-# Press Umschalt+F10 to execute it or replace it with your code.
-# Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
-
-
-def print_hi(name):
-    # Use a breakpoint in the code line below to debug your script.
-    print(f'Hi, {name}')  # Press Strg+F8 to toggle the breakpoint.
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.firefox.options import Options
+from time import sleep
 
 
-# Press the green button in the gutter to run the script.
-if __name__ == '__main__':
-    print_hi('PyCharm')
+opts = Options()
+opts.headless = True
 
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
+driver = webdriver.Firefox(options=opts)
+driver.get("https://conjugator.reverso.net/conjugation-french-verb-{}.html")
+
+# anticipate asking permission for cookie settings
+cookie_accept = driver.find_element(By.ID, "didomi-notice-agree-button")
+cookie_accept.click()
+
+# search
+sleep(1)
+verbToSearch = "manger"
+search_bar = driver.find_element(By.ID, "txtVerb")
+search_bar.send_keys(verbToSearch)
+
+driver.find_element(By.ID, "lbConjugate").click()
+sleep(0.5)
+h2s = driver.find_elements(By.TAG_NAME, "h2")
+for x in h2s:
+    print(x.text)
